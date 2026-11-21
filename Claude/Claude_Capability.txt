@@ -1,0 +1,43 @@
+Claude Capability
+capability: khả năng
+confuse: mập mờ, mơ hồ.
+1. Different Claude model reasoning vs Thinking capability?
+- Increase reasoning effort allow Claude to spend more compute on planning, analysis and solving complex problem (multi-step reasoning). Reasoning level: Low (Fast), Medium, High (Max reasoning for complex coding).
+- Claude Thinking enable model to perform additional internal reasoning before generating a response, improving it's ability to solve complex problems. 
+- When thinking is enabled, Claude analyzes the prompt, plans it approach, and produces a summarized thinking block before the final response.
+- After complete its reasoning, Claude return a final response to user, while the thinking process remain separate from the final answer. 
+- Thinking là lượng thời gian/token mà Claude được phép dùng để suy nghĩ trước khi trả lời. Question -> Answer -> Thinking, analyze -> Answer -> Thinking -> Answer
+- Claude thinking is a step before reasoning really happens, where reasoning control how much compute Claude allocates to its reasoning process.
+- Thinking is best for complex planning, debugging, math reasoning, and multi step problem solving.
+- Reasoning is best for balance response quality, latency and cost based on task complexity.
+3. What problem of LLM?
+- LLM are trained on static data, LLM don't know your private or lastest data, 
+- Retrain or fine-tune is slow, expensive, and brittle.
+- High risk of hallucination
+
+Why finetune falls short?
+- Require new data and label
+- Multi iteration: Collect data -> Retrain -> Finetune -> Evaluate => Hard to keep model up to date
+- Not ideal for frequently changing knowledge
+- Operationally heavy for enterprise system.
+
+2. What is RAG? (Retrieval augmented generation)
+- In Retrieval augmented generation, we task foundation-large language model. 
+- Before generate that retrieval pipeline, we focus on arranging our enterprise documents in the form of a database.
+corpus: Tập ngữ liệu
+- Once that retrieval pipeline functions very well, we take the grounding knowledge, we take the user query and then send that as a final prompt to LLM, and boom, you have a chatbot that's built on top of your enterprise knowledge.
+- In RAG pipeline, you don't train the model, but you focus on generating or establishing database of unstructured document. 
+- RAG pipeline = Retrieval (Search for relevant info in Google) -> Augmented (Feed retrieved content into model) -> Generation (Produce a natural language response)
+- Xây dựng LLM cơ bản, hỏi một kiến thức mới. LLM ko biết câu trả lời. RAG cho phép tìm kiếm thông tin bên ngoài, đưa vào model, trả lời. 
+4. Why RAG is critical in Enterprise AI?
+- Keep response up to date
+- Solve hallucination, freshness and private-data limitation of LLMs
+- Work with private and proprietary data
+- Fastest and cheaper than fine-tune.
+5. What is Vector Embedding? 
+- Vector embedding are a way of representing words, sentences, images or other data as numerical vector in a high dimensional space.
+- These vectors capture the semantic or contextual information in the data, allow similar items to be closer in that space. 
+6. Visualize RAG:
+Input query -> Search relevant document (document -> indexing -> embedding -> chunk vector, use vector embedding of query to search document, search similar chunk vector) -> Combine input query and relevant document(Ex: Query + Please select answer base on info: Chunk1, Chunk2, Chunk3) -> Answer
+7. RAG Architecture Discussion:
+Input prompt => OpenAI Vector Embedding Engine (read PDF document) => QDrant Vector Database -> Claude Message API => Output

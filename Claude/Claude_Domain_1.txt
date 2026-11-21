@@ -1,0 +1,35 @@
+Claude Domain 1.
+1. Different Agent vs Workflow?
+- Worklow: A developer-authored sequence where control flow is fixed at design time. Your code decides the order, and the model just fills in each step
+- Agent: A system where the model decides the next action at runtime, driving a loop of reason, act, and observe until it hits a stopping condition.
+2. What is Augmented LLM? Augmented LLM has features:
+- Retrieval: Pulling relevant context into the prompt so the model answers from real information instead of guessing.
+- Tool: Let the model take action in the world, like query DB or call a service
+- Memory: Carrying state across a task so the model can build on what it has already done. Keep context. 
+3. Agentic system:
+- At one end, your code owns the order of operation
+- At the other, the model owns it at runtime
+- Fixed paths, are predictable and easy to test
+- Model-driven paths: Adapt to inputs you didn't foresee
+5. Three signal you need an agent: 
+- Open ended space: The task can unfold (phát triển) in many directions you simply can't list.
+- Unknown steps: You can't predict how many actions the job will really take to finish.
+- Model chooses tools: Let the model itself pick which tool and when. 
+6. Is a workflow enough?
+- Can you write the steps out in a fixed order? Does the same input alway take same path? If yes, workflow is enough
+- Prove workflow can't do before pay for agent
+7. 3 workflow shape:
+- Prompt chaining: P1 -> P2 -> P3 Break a task into a fixed sequence when each call works on the previous output
+- Routing: User -> ? -> P1 or P2 or P3. Classify an incoming request and send it to the handler built for that case
+- Parallelization: User -> All P1,P2, P3 run in parallel. Run independent pieces at once, or run the same task several times and compare.
+4. Best practice to choose Workflow or Agent?: 
+- Prefer the simplest design that solve the task
+- Three signals to use Agent: Open space, unknown step, model-chosen tools
+- Workflow shapes: Prompt chaining, routing, parallelization
+- Hybrids workflow and agent: Wrap an agent inside a workflow stage
+5. Disadvantage of build Agent, not build Workflow:
+- Latency: A loop makes serveral call in sequence, so users wait longer than for 1 response
+- Token cost: Every turn re-sends the growing context, so bill grow with each step.
+6. Advantage of Agent:
+- Task performance: The model's ability to adapt to adapt to messy output. A rigid script of Workflow cann't bring.
+Trade off between Latency + Token cost to get Task performance
