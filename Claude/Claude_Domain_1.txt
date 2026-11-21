@@ -33,3 +33,26 @@ Claude Domain 1.
 6. Advantage of Agent:
 - Task performance: The model's ability to adapt to adapt to messy output. A rigid script of Workflow cann't bring.
 Trade off between Latency + Token cost to get Task performance
+7. Compare advantage Workflow vs Agent:
+- Workflow: Predictable, cheaper, and faster. It does the same thing on every run, which makes it easy to test and easy to trust. Suitable when task is well defined.
+- Agent: Flexible and adaptive, bust it cost more, run slower, and can have mistake that a workflow script would never make.
+8. Why a loop of Agent cost more?
+- More turn: The loop keeps calling the model until task is done, as each call bill.
+- Every accumulate: instruction, tool calls, and results.
+- Bigger context: Every turn carries the full history, so later turns are the priciest ones.
+- Compounding error: A wrong step early feeds every step after it, and the model build on the mistake. Step A fail -> Step B fail -> ...
+- Slower responses: Sequential round trips add latency.
+9. What is compounding error?
+- Compounding error (lỗi tích lũy) are sneaky cost (chi phí ẩn) of a loop
+- In workflow, if step have mistake, your code can catch it. But in agent, a mistake step become input for next decision. By a few turn later, it can be far of track (đi lệch hướng) with no point of failure (dấu hiệu lỗi). The more step without a checkpoint, the more room to make big failure.
+10. Why workflow stay reliable?
+- Predictability: A fixed path produce the same behavior every run, so you can reason about it
+- Auditability: You can trace exactly which step ran, in which order and why?
+- Consistency: No runtime improvisation, so the behavior doesn't drift (change) from one call to the next.
+11. What is Hybrid design Agent vs Workflow? How many type?
+- Agent inside a stage of Workflow: Drop a scoped agent into just 1 open-ended step of an otherwise fixed pipeline, where flexibility is needed
+- Workflow around Agent: Agent in center, make decision. The workflow handle ordering, validation, and error handling, support execute this decision, so you get predictability at the edge and adaptability only in the core.
+12. What is sub-agent?
+- When you push 1 agent to handle big, messy job end-to-end, it context ballons (Phình to) and answer get worse (tồi tệ). A managet delegate piece to subagent can fix that problem. 
+- Manager is orchestrator (người điều phối)
+1 month, 4 week is not enough for course 14 hour, 42 section. 1 week 10 session, 1 day 1.3 session. Note everytext is not ok, listen all course, note only keyword, special image, ChatGPT will explain keyword for you.
