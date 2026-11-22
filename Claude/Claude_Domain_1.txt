@@ -52,7 +52,30 @@ Trade off between Latency + Token cost to get Task performance
 11. What is Hybrid design Agent vs Workflow? How many type?
 - Agent inside a stage of Workflow: Drop a scoped agent into just 1 open-ended step of an otherwise fixed pipeline, where flexibility is needed
 - Workflow around Agent: Agent in center, make decision. The workflow handle ordering, validation, and error handling, support execute this decision, so you get predictability at the edge and adaptability only in the core.
-12. What is sub-agent?
-- When you push 1 agent to handle big, messy job end-to-end, it context ballons (Phình to) and answer get worse (tồi tệ). A managet delegate piece to subagent can fix that problem. 
-- Manager is orchestrator (người điều phối)
-1 month, 4 week is not enough for course 14 hour, 42 section. 1 week 10 session, 1 day 1.3 session. Note everytext is not ok, listen all course, note only keyword, special image, ChatGPT will explain keyword for you.
+12. What is 3 core role in Agent?
+When you push 1 agent to handle big, messy job end-to-end, it context ballons (Phình to) and answer get worse (tồi tệ). A managet delegate piece to subagent can fix that problem. Need use subagent:
+- Manager: Orchestrator agent. Decompose goal, delegate subtask to subagent, synthesize
+- Subagent
+- Delegation
+13. Why need use Sub-agent:
+- Context isolation
+- Parallelization: Independent subagent run concurrently
+- Tool restriction: Each subagent get only tools its assigned task need.
+14. 3 guardrail on scope Subagent?
+- Least privilege: Give subagent only tool and permission its task requires
+- Side effect boundary: A scoped sub-agent should produce no write or action beyond its assigned subtask
+- Result validation: Manager check each return result before trusting it in final answer.
+15. Common anti-pattern when use Sub-Agent?
+- Overly board scope, give sub-agent too much job, it burn token, and response something muddy. Keep each sub-agent narrow.
+- Unpowered context. Give it too little context, data
+- Parallel only thinking. Treat sub-agent only like parallel worker. Speed is nice, but context isolation,keep manager windows clean mới là thế mạnh của Sub-agent. Orchestrator-worker decide subtasks at runtime, unlike fixed parallelism.
+16. Why subagent run in isolation?
+- Own context windows: Each subagent run in context windows fully separate from manager
+- No inherited history: Subagent does not receive manager conversation, tool result, or system prompt.
+- Final message return: Only sub-agent's final msg goes back to manager, to its intermediate steps.
+- Subagent only see own prompt, CLAUDE.md, and tool, receive anything you expilcitly pass to task. Never manager history, manager result, many system prompt.
+- Isolation bound token growth: Only summary result of SubAgent are retainer in manager context.
+17. 3 Authority Boundaries of Sub-Agent:
+- Least privilege
+- Side-effect limit: No write, action outside of subtask
+- Contained blast radius: Is subagent misbehaves, it limited scope and tool, keep damage small. 
