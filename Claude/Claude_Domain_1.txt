@@ -79,3 +79,37 @@ When you push 1 agent to handle big, messy job end-to-end, it context ballons (P
 - Least privilege
 - Side-effect limit: No write, action outside of subtask
 - Contained blast radius: Is subagent misbehaves, it limited scope and tool, keep damage small. 
+18. Setup Claude SDK?
+- Agent SDK
+- query(): Run standalone agent loop, each call start a fresh session by default.
+- No need Command Line tool. 
+19. Config to run Claude Query:
+- System_prompt: Set agent's role and instruction
+- List tool allow agent to use
+- Select model
+- Config maximum agent turn before stop.
+20. Stream to read message:
+- Init message open the run
+- Assistant and tool message show reasoning and result in order
+- A final result message close the run with cost and status
+21. 3 trait (đặc điểm) of Claude Run :
+- Standalone
+- Streamed: Message arrive as an sync iterator, read live as the agent work, not in 1 block (gửi response từng phần ngay khi done)
+- Session-scope: Fresh session each call.
+22. How agent loop run?
+Claude receive prompt, tool, history and init message
+=> Claude response with text or tool call
+=> Agent SDK executes tool and feedback result
+=> Claude read result, reason and turn repeat if it call more tool
+- Repeat until goal is met, Claude call no tool.
+- Turn is 1 round trip: Claude request tool, SDK run, feedback. Turn end when tool return result. 
+23. 5 type of message?
+- System Message open the run, include init subtype.
+- Assistant Message carries Claude's text and tool calls
+- User Message deliver tool result back into the loop
+- StreamEvent appears only when partial streaming in on. 
+- Result Message close the run with cost and status. include subtype (status), total_cost_id, num_turns and session_id (for audit and resume).
+24. How to set bound for Agent Loop?
+- Set max_turns for loop. Hitting it stop the loop and return error result
+- Set max_budget_usd, max spend in dollars. Check between call, so a run can overshot before it halts with budget error.
+- Default no cap (no bound). Developer must set bound if needed.

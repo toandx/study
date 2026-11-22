@@ -1,0 +1,15 @@
+1. Delete empty folder: rmdir /mnt/d/wsl
+2. Delete folder contain file: sudo rm -r /mnt/d
+3. Update lastest package: sudo apt update
+When sudo apt install, get package info, download install
+=> If package info out of date, sudo install not work.
+4. Install Java 8: sudo apt install openjdk-8-jdk -y
+java -version
+echo $JAVA_HOME
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export PATH=$JAVA_HOME/bin:$PATH
+ls /usr/lib/jvm/
+5. Check all path variable: echo $PATH
+nohup java -jar myapp.jar > app.log 2>&1 &
+6. Download file
+wget https://aka.ms/download-jdk/microsoft-jdk-17.0.21.0.2-linux-x64.tar.gz
