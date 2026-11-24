@@ -108,8 +108,21 @@ Claude receive prompt, tool, history and init message
 - Assistant Message carries Claude's text and tool calls
 - User Message deliver tool result back into the loop
 - StreamEvent appears only when partial streaming in on. 
-- Result Message close the run with cost and status. include subtype (status), total_cost_id, num_turns and session_id (for audit and resume).
+- Result Message close the run with cost and status. include subtype (status), total_cost_id, num_turns and session_id (for audit and resume). Only success subtype carries result text, error subtype return nothing.
 24. How to set bound for Agent Loop?
 - Set max_turns for loop. Hitting it stop the loop and return error result
 - Set max_budget_usd, max spend in dollars. Check between call, so a run can overshot before it halts with budget error.
 - Default no cap (no bound). Developer must set bound if needed.
+25. What happend when Agent hit limit?
+- Code see error result, execution stop
+- Wrap it in try exception if you want to keep going
+- A streaming session stays alive instead of raising
+- Reading a stopped run: stop_reason, num_turns, session_id 
+rely: phụ thuộc
+argues: Lập luận
+spining up: Thực thi
+payoff: có hiệu quá
+broader: Rộng hơn
+rival: Đối lập
+26. Different between query() and ClaudeSDKClient?
+- Both run same loop, query() start a fresh session per call, while client hold 1 session open, allow interruption (gián đoạn)

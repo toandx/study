@@ -1,0 +1,22 @@
+Claude Section 4
+1. Different Streaming and Single-message input?
+Agent SDK take prompt by 2 way:
+- Stream message, stream a live series of message: Your prompt isn't a single string, it's an async series of messages and agent run as persistent (bền vững), long lived process. It's default.
+- Single message input, get 1 answer back. Fit for stateless environment, one-off request (yêu cầu xử lý 1 lần). 
+2. What stream input unlock?
+- Attach image directly in message
+- Queue new message while a turn is still running
+- Interrupt a run in real time, via the client object, don't need wait to finish.
+- Hold multi turn context naturally, across the conversation.
+3. How to select a mode for Agent SDK workload?
+- Need many turns + tool use => Streaming input. Long conversation with tool and state
+- One off call + simple => Single message. 1 request, 1 response, stateless. 
+- Need image or lives input => Streaming (Live input). 
+- When unsure, Streaming input is recommended mode. 
+4. Clear the confusion:
+- Streaming and single message are input model into 1 shared agent loop, not seperate engines.
+- query() accept async prompt, doesn't require client. But interrupt still require Claude SDK client.
+- Stream input <> Stream output. SDK stream input differ from API response stream
+- Partial output stream: turn on include_partial_message to receive StreamEvent live deltas, token by token. 
+- stream true: The API level response flag on the raw model call, a seperate mechanism from SDK input stream. 
+
