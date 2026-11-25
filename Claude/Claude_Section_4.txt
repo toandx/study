@@ -19,4 +19,29 @@ Agent SDK take prompt by 2 way:
 - Stream input <> Stream output. SDK stream input differ from API response stream
 - Partial output stream: turn on include_partial_message to receive StreamEvent live deltas, token by token. 
 - stream true: The API level response flag on the raw model call, a seperate mechanism from SDK input stream. 
-
+5. 3 level of Claude?
+- Message API: User call Message API, read stop_reason, run tool yourself, and re-invoke.
+- Agent SDK: Claude Code packaged as a library. It run the loop and execute tool for you.
+- Managed Agent: A fully hosted harness. Anthropic runs the loop and sandbox on their infrastructure.
+6. Why we need give up SDK's convenience?
+- When you need total control over each turn in custom loop
+- Loop process: Send (send message array) => Detect (detect any tool_use block in reply) => Execute (execute tool, capture result) => Append (append tool_result block, then re-invoke) => Repeat
+7. 3 block drive the loop:
+- tool_use: A block naming a tool and input. Signal call tool
+- tool_result: result of tool
+- stop_reason: Inspect each turn, if stop_reason = tool_use, Claude has paused and is waiting for you to run tool
+- Client tool run in your app, server tool run in Anthropic infrastructure.
+8. 3 term of Harness (khung điều phối):
+Harness là bộ khung bao quanh Agent loop, đảm nhiệm: Turn accounting, state tracking, error handling. 
+- Harness is the loop + all infrastructure around it. The code gather context, send request, run tool, and feedback result.
+- Turn accounting. Count each tool-use round trip, enforce the budget.
+- Stop condition: A explicit rule that end the loop: task done, turn cap hit or an error.
+9. Hand-rolled harness vs Agent SDK harness?
+- Hand-rolled harness: You write turn accounting, state, stop logic. More control, more code you own and maintain.
+- Agent SDK harness: The loop, tool execution, context management and limit core built in. Less code, but you accept framework's shape.
+- Trap: When stream a response, argument don't arrive all at once. They come in pieces. Stream send deltas of type input, JSON delta. It parses Json only when block closes.
+10. How to design a Reliable Harness?
+- Turn accounting caps the loop from your runtime.
+- State tracking hold the growing conversation
+- Error handling decide retry, skip or abort
+- Stop condition end the loop deterministically (tất định, đã quyết định từ trước)
