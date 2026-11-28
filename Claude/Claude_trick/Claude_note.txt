@@ -1,0 +1,36 @@
+schema: Lược đồ
+occasionally: đôi khi
+losening: Nới lỏng
+dispatch: gửi đi
+ko tin prompt, ko tin đồng nghiệp
+Tệp CLAUDE.md ở các thư mục chỉ cộng dồn, không ưu tiên tuyệt đối. 
+plausible: hợp lý
+- When agent extract info, config nullable when info don't contain field.
+1. Khi có nhiều tool trùng tính năng, pick tool không phù hợp => consolidate (hợp nhất) tool, xóa tool thừa
+2. điều kiện nghiêm => tạo sp giống nhau. => Chọn nhiệt độ phù hợp, lấy mẫu config phù hợp.
+3. Code review inconsistent check repo => Inspect skill manifest, invocation criteria.
+permitted: được cho phép
+4. Resume agent without recreate permitted task context => Inspect available tool + Build Agent SDK 
+5. Check persistent connection => WebSocket
+6. Nên tích hợp Claude API trực tiếp hay dùng abstraction hỗ trợ nhiều LLM provider => Chỉ tích hợp Claude, nhiều provider chỉ tăng phức tạp
+MCP server là cấu nối giữa LLM AI và tool. Claude -> MCP -> tool
+7. Select STDIO or HTTP for Claude local invoke MCP server? 
+-> STDIO for local
+8. Agent repeat full tool history on every turn -> Inspect input token count, prompt structure
+9. Use Agent SDK to fix fail test. Agent end, return "Text Fixed" but pytest still report fail
+=> Use a stop hook run pytest
+10. Test command need permitted auto while deploy, what action need?
+- Inspect effective setting.json, permission rule
+- Use scoped settings and permission policy
+11. Team use Sonet 4.5, call end message with Json. Change model to Sonet 5.5, fail 400. Which change required?
+- Replace manual thinking to adaptive thinking.
+- Remove prefilled assistant turn and enfore the JSON shape
+12. On search heavy question, answer stop mid-thought. stop_reason="pause_turn", what should loop do?
+- Append the response unchanged as the assistant turn (thêm turn) and call API again with same tool. Pause_turn mean hit max_turn limit. 
+13. Prompt engineer vs Context Engineer?
+- Prompt engineer shape individual prompt for specific output, while context engineer manage how content flows across turn and step
+14.  A tool action succeeds but the UI claims failure because its acknowledgment parser rejects an optional field. What inspect?
+Correct: Inspect event timelines, reproducible inputs, application logs
+15. Hook reject write outside but preview command still execute. What action?
+- Use determinstic lifecycle hook to manage logging, validation
+- Inspect hook event type.

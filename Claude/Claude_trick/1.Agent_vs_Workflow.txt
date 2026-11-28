@@ -1,0 +1,28 @@
+https://anthropic.cloudexam.pro/kien-thuc/ccdv-f/1-3-mau-agent-va-framework
+1. 3 cách dựng Agent: 
+- Client SDK : Call Claude Message API, tự tạo vòng lặp, chạy tool, lưu lịch sử. Có sẵn API
+- Agent SDK: Tự chạy process, có sẵn agent loop, tool, permission, subagent, session, hook.
+- Claude managed agent: Chỉ khai báo agent, Claude tự chạy agent, sandbox chạy tool, lưu session phía server.
+2. Các tham số khi dùng Agent SDK:
+- allowed_tools
+- disallowed_tools
+- max_turns
+- max_budget_usd
+- hooks : Hàm chạy ở thời điểm cố định của loop
+- resume: Nạp session ID để chạy tiếp phiên cũ
+- Bẫy đề: Khi agent cần tùy chỉnh vượt qua mặc định SDK (quản lý lịch sử, retry, error handling), chỉ cần custom tùy chỉnh. Không cần gỡ hết hay bỏ SDK. 
+3. Agent chạy ở đâu:
+- Với agent SDK, vòng lặp chạy ở process của bạn, tool chạy ở máy của bạn
+- Với managed Agent,sandbox trên cloud: vòng lặp chạy ở Anthropic, tool chạy ở Sandbox Anthropic.
+- Với managed Agent, sandbox tự host (dùng khi bảo mật): Vòng lặp chạy ở Anthropic, tool chạy ở your server, qua một environment worker nhận việc từ hàng đợi
+4. Hook trong Agent là gì?
+- Prompt có thể dặn "đừng restart service" nhưng model có thể không làm theo. Hook dùng để đảm bảo cho những việc phải xảy ra chắc chắn (deterministic action). 
+- Hook là hàm của bạn, được SDK gọi ở thời điểm cố định, như trước khi gọi tool (PreToolUse) hay sau gọi tool (PostToolUse). Hook PreToolUse có thể trả quyết định deny để chặn gọi tool, bất kể model muốn gì.
+
+Client SDK: bạn tự viết vòng lặp. Agent SDK: vòng lặp, tool, quyền, hook có sẵn, bạn vận hành process. Managed Agents: Anthropic chạy vòng lặp, tool chạy trong sandbox của Anthropic hoặc của bạn. Việc gì nhất định phải xảy ra hay không được xảy ra thì giao cho hook, đừng chỉ dặn trong prompt.
+5. Five workflow shape:
+- Prompt chaining: Chia công việc nhiều bước, tuần tự
+- Routing: Phân loại đầu vào, gửi tới prompt chuyên biệt
+- Parallelization: Chạy nhiều tác vụ độc lập đồng thời
+- Orchestrator-worker: 
+- Evaluator - optimizer: Tạo kết quả, đánh giá rồi lại tạo kết quả tốt hơn, lặp lại.
